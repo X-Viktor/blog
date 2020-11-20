@@ -3,11 +3,16 @@
 {% block title %}Blog list{% endblock %}
 
 {% block content %}
-    {% for blog in object_list %}
+    {% for blog in blogs %}
     <div class="blog">
-        <h2><a href="">{{ blog.title }}</a></h2>
+        <h2><a href="#">{{ blog.title }}</a></h2>
         <p class="text-right">{{ blog.author }}</p>
-        <hr>
+        {%  if request.user not in blog.subscribers.all  %}
+            <button class="btn btn-success">Subscribe</button>
+        {% else %}
+            <button class="btn btn-primary">Unsubscribe</button>
+        {% endif %}
     </div>
-  {% endfor %}
+    <hr>
+    {% endfor %}
 {% endblock %}

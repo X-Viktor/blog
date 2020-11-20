@@ -3,12 +3,13 @@
 {% block title %}Post list{% endblock %}
 
 {% block content %}
-    {% for post in object_list %}
+    {% for post in posts %}
     <div class="post">
-        <h2><a href="">{{ post.title }}</a></h2>
+        <h2><a href="#">{{ post.title }}</a></h2>
         <p>{{ post.description }}</p>
         <p class="text-right">{{ post.time }}</p>
         <hr>
     </div>
-  {% endfor %}
+    <hr>
+    {% endfor %}
 {% endblock %}
