@@ -10,6 +10,7 @@ class BlogAdmin(admin.ModelAdmin):
         'slug': ('title', ),
     }
 
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'time', 'author']
+    list_display = ['title', 'time', 'blog']

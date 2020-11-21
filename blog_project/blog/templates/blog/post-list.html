@@ -4,12 +4,14 @@
 
 {% block content %}
     {% for post in posts %}
-    <div class="post">
-        <h2><a href="#">{{ post.title }}</a></h2>
-        <p>{{ post.description }}</p>
-        <p class="text-right">{{ post.time }}</p>
-        <hr>
-    </div>
-    <hr>
+        {%  if request.user in post.blog.subscribers.all  %}
+        <div class="post">
+            <h2><a href="#">{{ post.title }}</a></h2>
+            <p>{{ post.description }}</p>
+            <p class="text-right">{{ post.time }}</p>
+            <p class="text-right">{{ post.blog }}</p>
+            <hr>
+        </div>
+        {% endif %}
     {% endfor %}
 {% endblock %}

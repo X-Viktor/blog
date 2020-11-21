@@ -19,13 +19,34 @@ class Blog(models.Model):
         return self.title
 
 
+class UsersReader(models.Model):
+    user = models.ForeignKey(
+        'auth.User',
+        on_delete=models.CASCADE
+    )
+    post = models.ForeignKey(
+        'blog.Post',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.user
+
+
 class Post(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(
-        'auth.User',
+    blog = models.ForeignKey(
+        Blog,
+        related_name='post',
         on_delete=models.CASCADE
+    )
+    users_read = models.ManyToManyField(
+        'auth.User',
+        through=UsersReader,
+        through_fields=('post', 'user'),
+        blank=True
     )
 
     def __str__(self):
