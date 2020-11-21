@@ -19,7 +19,7 @@ class Blog(models.Model):
         return self.title
 
 
-class UsersReader(models.Model):
+class UsersRead(models.Model):
     user = models.ForeignKey(
         'auth.User',
         on_delete=models.CASCADE
@@ -44,7 +44,7 @@ class Post(models.Model):
     )
     users_read = models.ManyToManyField(
         'auth.User',
-        through=UsersReader,
+        through=UsersRead,
         through_fields=('post', 'user'),
         blank=True
     )

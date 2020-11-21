@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Blog, Post, UsersReader
+from .models import Blog, Post, UsersRead
 
 
 @admin.register(Blog)
@@ -14,8 +14,3 @@ class BlogAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'time', 'blog']
-
-
-@admin.register(UsersReader)
-class UsersReaderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'post']
