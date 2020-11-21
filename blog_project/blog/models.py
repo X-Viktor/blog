@@ -1,4 +1,8 @@
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+from .tasks import email_notification
 
 
 class Blog(models.Model):
@@ -51,3 +55,13 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+@receiver(post_save, sender=Post)
+def post_created(sender, instance, created, **kwargs):
+    if created:
+        blog_title = instance.title
+        url = f'http://localhost:8000/feed/{instance.pk}'
+        user_emails = instance.blog.subscribers.values_list('email', flat=True)
+        for email in user_emails:
+            email_notification(email, blog_title, url)

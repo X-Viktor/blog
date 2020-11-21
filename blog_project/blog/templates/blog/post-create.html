@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Create new post{% endblock %}
+
+{% block content %}
+ <form action="{% url 'post_create' %}" method="POST">
+     {% csrf_token %}
+     {% if not_registered %}
+        {{ not_registered }}
+     {% endif %}
+     {% if no_blog %}
+        {{ no_blog }}
+     {% endif %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+{% endblock %}

@@ -1,9 +1,10 @@
 from django.views import generic
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 
 from .models import Blog, Post, UsersRead
+from .forms import PostCreateForm
 
 
 class BlogListView(generic.ListView):
@@ -17,7 +18,9 @@ class BlogDetailView(generic.DetailView):
     context_object_name = 'blog'
     template_name = 'blog/blog-detail.html'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
+        """ Return posts belonging to a specific blog """
+        super(BlogDetailView, self).get_object(queryset)
         return Post.objects.filter(blog__slug=self.kwargs['slug'])
 
 
@@ -52,8 +55,31 @@ class PostDeleteView(generic.DeleteView):
         return author
 
 
+class PostCreateView(generic.CreateView):
+    form_class = PostCreateForm
+    template_name = 'blog/post-create.html'
+
+    def post(self, request, *args, **kwargs):
+        """ Checking fields, user and blog availability """
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            if self.request.user.is_anonymous:
+                not_registered = 'You must register or login'
+                return render(request, self.template_name, {'form': form, 'not_registered': not_registered})
+            blog = Blog.objects.get(author=self.request.user)
+            if blog:
+                post = form.save(commit=False)
+                post.blog = blog
+                post.save()
+                return HttpResponseRedirect(reverse_lazy('post_detail', args=[post.pk]))
+            no_blog = 'You must create a blog'
+            return render(request, self.template_name, {'form': form, 'no_blog': no_blog})
+        return render(request, self.template_name, {'form': form})
+
+
 class BlogSubscribeView(generic.CreateView):
     def post(self, request, *args, **kwargs):
+        """ Adding a user to the number of subscribers """
         blog = get_object_or_404(Blog, pk=kwargs.get('pk'))
         user = request.user
         if not blog.subscribers.filter(pk=user.pk).exists():
@@ -64,6 +90,7 @@ class BlogSubscribeView(generic.CreateView):
 
 class BlogUnsubscribeView(generic.CreateView):
     def post(self, request, *args, **kwargs):
+        """ Removing a user from the number of subscribers """
         blog = get_object_or_404(Blog, pk=kwargs.get('pk'))
         user = request.user
         if blog.subscribers.filter(pk=user.pk).exists():
@@ -76,6 +103,7 @@ class BlogUnsubscribeView(generic.CreateView):
 
 class PostMarkAsReadView(generic.CreateView):
     def post(self, request, *args, **kwargs):
+        """ Mark a post as read """
         post = get_object_or_404(Post, pk=kwargs.get('pk'))
         user = request.user
         if not post.users_read.filter(pk=user.pk).exists():

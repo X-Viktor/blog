@@ -1,11 +1,12 @@
 from django.urls import path
 
 from .views import BlogListView, BlogDetailView, PostListView, PostDetailView, \
-    BlogSubscribeView, BlogUnsubscribeView, PostDeleteView, PostMarkAsReadView
+    BlogSubscribeView, BlogUnsubscribeView, PostDeleteView, PostCreateView, PostMarkAsReadView
 
 urlpatterns = [
     path('', BlogListView.as_view(), name='blog_list'),
     path('feed/', PostListView.as_view(), name='post_list'),
+    path('feed/create', PostCreateView.as_view(), name='post_create'),
     path('<int:pk>/subscribe/', BlogSubscribeView.as_view(), name='subscribe'),
     path('<int:pk>/unsubscribe/', BlogUnsubscribeView.as_view(), name='unsubscribe'),
     path('feed/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
