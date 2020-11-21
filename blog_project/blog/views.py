@@ -15,6 +15,7 @@ class PostListView(generic.ListView):
     template_name = 'blog/post-list.html'
 
     def get_queryset(self):
+        """Sort posts in reverse chronological order"""
         if not self.request.user.is_anonymous:
             return Post.objects.filter(blog__subscribers__in=[self.request.user]).order_by('-time')
         return []

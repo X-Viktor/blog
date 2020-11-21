@@ -10,7 +10,7 @@
         {%  if request.user not in blog.subscribers.all  %}
             <button class="btn btn-success">Subscribe</button>
         {% else %}
-            <button class="btn btn-primary">Unsubscribe</button>
+            <button class="btn btn-warning">Unsubscribe</button>
         {% endif %}
     </div>
     <hr>

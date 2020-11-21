@@ -10,6 +10,11 @@
             <p>{{ post.description }}</p>
             <p class="text-right">{{ post.time }}</p>
             <p class="text-right">{{ post.blog }}</p>
+            {% if request.user not in post.users_read.all %}
+                <button class="btn btn-warning">Mark as read</button>
+            {% else %}
+                <button class="btn btn-dark margin-auto" disabled>This post already read</button>
+            {% endif %}
             <hr>
         </div>
         {% endif %}
