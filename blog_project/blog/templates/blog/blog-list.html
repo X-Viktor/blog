@@ -3,9 +3,10 @@
 {% block title %}Blog list{% endblock %}
 
 {% block content %}
+<a href="{% url 'post_list' %}" class="btn btn-dark mt-3 mb-5">Feed</a>
     {% for blog in blogs %}
     <div class="blog">
-        <h2><a href="#">{{ blog.title }}</a></h2>
+        <h2><a href="{% url 'blog_detail' slug=blog.slug %}">{{ blog.title }}</a></h2>
         <p class="text-right">{{ blog.author }}</p>
         {%  if request.user not in blog.subscribers.all  %}
         <form action="{% url 'subscribe' pk=blog.pk %}" method="POST">

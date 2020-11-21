@@ -3,6 +3,7 @@
 {% block title %}Post list{% endblock %}
 
 {% block content %}
+<a href="{% url 'blog_list' %}" class="btn btn-dark mt-3 mb-5">Blogs</a>
     {% for post in posts %}
         {%  if request.user in post.blog.subscribers.all  %}
         <div class="post">
