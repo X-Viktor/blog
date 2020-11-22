@@ -9,8 +9,9 @@ urlpatterns = [
     path('feed/create', PostCreateView.as_view(), name='post_create'),
     path('<int:pk>/subscribe/', BlogSubscribeView.as_view(), name='subscribe'),
     path('<int:pk>/unsubscribe/', BlogUnsubscribeView.as_view(), name='unsubscribe'),
-    path('feed/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    # path('feed/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
     path('feed/<int:pk>/confirm_delete/', PostDeleteView.as_view(), name='post_delete'),
     path('feed/<int:pk>/mark_as_read/', PostMarkAsReadView.as_view(), name='post_mark_as_read'),
     path('<slug:slug>/', BlogDetailView.as_view(), name='blog_detail'),
+    path('<slug:slug>/<int:pk>', PostDetailView.as_view(), name='post_detail'),
 ]

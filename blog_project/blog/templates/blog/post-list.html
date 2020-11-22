@@ -6,15 +6,15 @@
 <a href="{% url 'blog_list' %}" class="btn btn-dark mt-3 mb-5">Blogs</a>
 <a class="btn btn-success mt-3 float-right" href="{% url 'post_create' %}">New post</a>
     {% for post in posts %}
-        {%  if request.user in post.blog.subscribers.all  %}
+        {% if request.user in post.blog.subscribers.all %}
         <div class="post">
-            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            <h2><a href="{% url 'post_detail' slug=post.blog.slug pk=post.pk %}">{{ post.title }}</a></h2>
             <h5>{{ post.description }}</h5>
             <p class="text-right">{{ post.time }}</p>
             <p class="text-right">{{ post.blog }}</p>
-            {%  if request.user not in post.users_read.all  %}
+            {% if request.user not in post.users_read.all %}
             <form action="{% url 'post_mark_as_read' pk=post.pk %}" method="POST">
-                {% csrf_token  %}
+                {% csrf_token %}
                 <input class="btn btn-warning" type="submit" value="Mark as read">
             </form>
             {% else %}

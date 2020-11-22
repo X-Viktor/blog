@@ -16,12 +16,16 @@ class BlogListView(generic.ListView):
 class BlogDetailView(generic.DetailView):
     model = Blog
     context_object_name = 'blog'
+    extra_context = {'title': 'Blog', 'author': 'User'}
     template_name = 'blog/blog-detail.html'
 
     def get_object(self, queryset=None):
         """ Return posts belonging to a specific blog """
-        super(BlogDetailView, self).get_object(queryset)
-        return Post.objects.filter(blog__slug=self.kwargs['slug'])
+        slug = self.kwargs['slug']
+        blog = Blog.objects.get(slug=slug)
+        self.extra_context['title'] = blog.title
+        self.extra_context['author'] = blog.author
+        return Post.objects.filter(blog__slug=slug)
 
 
 class PostListView(generic.ListView):
@@ -80,12 +84,15 @@ class PostCreateView(generic.CreateView):
 class BlogSubscribeView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         """ Adding a user to the number of subscribers """
-        blog = get_object_or_404(Blog, pk=kwargs.get('pk'))
-        user = request.user
-        if not blog.subscribers.filter(pk=user.pk).exists():
-            blog.subscribers.add(user)
-            return HttpResponse(f'User {user} subscribed')
-        return HttpResponse(f'User {user} already subscribed.')
+        if not self.request.user.is_anonymous:
+            blog = get_object_or_404(Blog, pk=kwargs.get('pk'))
+            user = request.user
+            if not blog.subscribers.filter(pk=user.pk).exists():
+                blog.subscribers.add(user)
+                return HttpResponse(f'User {user} subscribed')
+            return HttpResponse(f'User {user} already subscribed.')
+        else:
+            return HttpResponse('You must register or login')
 
 
 class BlogUnsubscribeView(generic.CreateView):
