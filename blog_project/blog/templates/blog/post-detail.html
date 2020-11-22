@@ -3,10 +3,13 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<a href="{% url 'post_list' %}" class="btn btn-dark mt-3 mb-5">Back</a>
+<a href="{% url 'blog_list' %}" class="btn btn-dark mt-3 mb-5">Blogs</a>
+<a href="{% url 'post_list' %}" class="btn btn-dark mt-3 mb-5">Feed</a>
 <h2>{{ post.title }}</h2>
 <h5>{{ post.description }}</h5>
 <p class="text-right">{{ post.time }}</p>
 <p class="text-right">{{ post.blog }}</p>
-<a class="btn btn-danger mt-3 float-right" href="{% url 'post_delete' pk=post.pk %}">Delete</a>
+    {% if request.user == post.blog.author %}
+    <a class="btn btn-danger mt-3 float-right" href="{% url 'post_delete' pk=post.pk %}">Delete</a>
+    {% endif %}
 {% endblock %}
