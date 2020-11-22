@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %} Blog {% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 <a href="{% url 'blog_list' %}" class="btn btn-dark mt-3 mb-5">Back</a>
+    {% if request.user == author %}
+    <a class="btn btn-success mt-3 float-right" href="{% url 'post_create' %}">New post</a>
+    {% endif %}
     {% for post in blog %}
-    <h2>{{ post.title }}</h2>
+    <h2><a href="{% url 'post_detail' slug=post.blog.slug pk=post.pk %}">{{ post.title }}</a></h2>
     <h5>{{ post.description }}</h5>
     <p class="text-right">{{ post.time }}</p>
     <p class="text-right">{{ post.blog }}</p>
